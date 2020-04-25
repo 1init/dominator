@@ -26,8 +26,8 @@ pub struct App {
 impl App {
   pub fn new() -> Rc<Self> {
       Rc::new(App {
-        cnct_name: Mutable::new("".to_owned()),
-        cnct_mesg: Mutable::new("".to_owned()),
+        cnct_name: Mutable::new("".to_string()),
+        cnct_mesg: Mutable::new("".to_string()),
       })
   }
 
@@ -51,6 +51,10 @@ impl App {
                       .text("name")
                     }),
                     html!("input", {
+                      .property_signal("value", app.cnct_name.signal_cloned())
+                      .event(clone!(app => move | event: events::Input| {
+                        app.cnct_name.set_neq(event.value().unwrap_throw());
+                      }))
                     })
                   ])
                 }),
@@ -61,6 +65,10 @@ impl App {
                     .text("Message")
                     }),
                     html!("textarea", {
+                      .property_signal("value", app.cnct_mesg.signal_cloned())
+                      .event(clone!(app => move |event: events::Input| {
+                        app.cnct_mesg.set_neq(event.value().unwrap_throw());
+                      }))
                     }),
                   ])
                 }),
